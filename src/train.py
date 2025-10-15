@@ -1,4 +1,4 @@
-# src/train.py (version avec MLflow)
+# src/train.py (version avec MLflow et sauvegarde locale)
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -6,14 +6,17 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 import mlflow
 import mlflow.sklearn
+import joblib
 import os
 
 # Définir le nom de l'expérience MLflow
 mlflow.set_experiment("Analyse de Sentiments Twitter")
 
+# Créer le dossier models s'il n'existe pas
+os.makedirs('models', exist_ok=True)
 
 def train_model(model_name, pipeline):
-    """Entraîne un modèle et log les informations avec MLflow."""
+    """Entraîne un modèle et log les informations avec MLflow et localement."""
     with mlflow.start_run(run_name=model_name):
         # Charger les données
         train_df = pd.read_csv(os.path.join('data', 'train.csv'))
@@ -25,7 +28,6 @@ def train_model(model_name, pipeline):
         mlflow.log_param("model_type", model_name)
         mlflow.log_param("tfidf_ngram_range", params['tfidf__ngram_range'])
         mlflow.log_param("tfidf_max_features", params['tfidf__max_features'])
-
         if model_name == 'LogisticRegression':
             mlflow.log_param("clf_max_iter", params['clf__max_iter'])
 
@@ -34,9 +36,14 @@ def train_model(model_name, pipeline):
         pipeline.fit(X_train, y_train)
         print("Entraînement terminé.")
 
-        # Logger le modèle comme un artefact
+        # Sauvegarde locale du modèle
+        local_path = os.path.join('models', f"{model_name}_pipeline.joblib")
+        joblib.dump(pipeline, local_path)
+        print(f"Modèle sauvegardé localement dans: {local_path}")
+
+        # Logger le modèle comme artefact MLflow
         mlflow.sklearn.log_model(pipeline, f"{model_name}_pipeline")
-        print(f"Modèle {model_name} et paramètres loggés avec MLflow.")
+        print(f"Modèle {model_name} loggé dans MLflow.")
 
 
 if __name__ == "__main__":

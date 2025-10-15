@@ -1,0 +1,11 @@
+data/
+src/data/
+mlruns/
+models/
+*.csv
+*.zip
+*.joblib
+*.pkl
+__pycache__/
+.venv/
+venv/

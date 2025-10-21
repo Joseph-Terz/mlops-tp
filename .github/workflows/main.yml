@@ -41,11 +41,15 @@ jobs:
           python src/load_data.py
           python src/preprocess.py
           python src/train.py  # Génère les fichiers .joblib dans models/
-
-      # Étape 6: Évaluer les modèles
-      - name: Evaluate Models
-        run: |
           python src/evaluate.py
+
+      # Étape 6: Sauvegarder les modèles comme artefact
+      - name: Upload trained models
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-models
+          path: models/
 
       # Étape 7: Sauvegarder les résultats MLflow comme artefact
       - name: Upload MLflow results

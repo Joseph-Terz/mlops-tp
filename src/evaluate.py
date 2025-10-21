@@ -4,7 +4,6 @@ import joblib
 from sklearn.metrics import classification_report
 import os
 
-
 if __name__ == "__main__":
     # Charger les données de test
     test_df = pd.read_csv(os.path.join('data', 'test.csv'))
@@ -13,7 +12,7 @@ if __name__ == "__main__":
 
     # --- Évaluation du modèle de Régression Logistique ---
     print("Évaluation du modèle de Régression Logistique...")
-    lr_pipeline = joblib.load(os.path.join('models', 'logistic_regression_pipeline.joblib'))
+    lr_pipeline = joblib.load(os.path.join('models', 'LogisticRegression_pipeline.joblib'))  # Correction de la casse
     lr_predictions = lr_pipeline.predict(X_test)
 
     print("\n--- Rapport de Classification (Régression Logistique) ---")
@@ -24,7 +23,7 @@ if __name__ == "__main__":
 
     # --- Évaluation du modèle Naive Bayes ---
     print("\nÉvaluation du modèle Naive Bayes...")
-    nb_pipeline = joblib.load(os.path.join('models', 'naive_bayes_pipeline.joblib'))
+    nb_pipeline = joblib.load(os.path.join('models', 'NaiveBayes_pipeline.joblib'))  # Correction de la casse
     nb_predictions = nb_pipeline.predict(X_test)
 
     print("\n--- Rapport de Classification (Naive Bayes) ---")
